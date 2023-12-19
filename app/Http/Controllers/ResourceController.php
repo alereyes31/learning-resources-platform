@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Models\Resource;
+use App\Models\Category; // Asegúrate de importar la clase Category
 
 class ResourceController extends Controller
 {
@@ -16,5 +17,20 @@ class ResourceController extends Controller
             'canRegister' => Route::has('register'),
             'resources' => Resource::with('category')->get(),
         ]);
+    }
+
+    public function store(Request $request)
+    {
+        Resource::create([
+            'title' => $request->input('title'),
+            'link' => $request->input('link'),
+            'description' => $request->input('description'),
+            'category_id' => Category::first()->id,
+            'creator_id' => $request->user()->id,
+        ]);
+
+        // Puedes agregar una redirección u otra lógica después de crear el recurso
+
+        return response()->json(['message' => 'Recurso creado con éxito']);
     }
 }
