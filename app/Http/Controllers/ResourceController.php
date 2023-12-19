@@ -25,7 +25,7 @@ class ResourceController extends Controller
             'title' => $request->input('title'),
             'link' => $request->input('link'),
             'description' => $request->input('description'),
-            'category_id' => Category::first()->id,
+            'category_id' => $request->category_id,
             'creator_id' => $request->user()->id,
         ]);
 

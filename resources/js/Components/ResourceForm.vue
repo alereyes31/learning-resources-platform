@@ -6,22 +6,27 @@ let categories = ref([]);
 let title = ref('');
 let description = ref('');
 let link = ref('');
+let category_id = ref(null);
 
 onMounted(() => {
     axios.get('api/categories').then((response) => {
-        categories = response.data;
+        categories.value = response.data;
     });
 });
 
 function createResource() {
-    console.log("Creando Recurso", title.value, description.value, link.value);
+    console.log("Creando Recurso", title.value, description.value, link.value, category_id.value);
     axios.post('api/resources', {
         title: title.value,
         description: description.value,
-        link: link.value
+        link: link.value,
+        category_id: category_id.value
     }).then((response) => {
-        console.log(response);
-    });
+        window.location.href = '/';
+    })
+    .catch((error) => {
+        alert(error.message);
+    })
 }
 
 </script>    
@@ -55,6 +60,18 @@ function createResource() {
           <input type="text" v-model="link" id="link" class="form-control" />
         </div>
       </div>
+      <div class="row mb-3">
+    <div class="col-md-3">
+        <label for="link">Categoria:</label>
+    </div>
+    <div class="col-md-9">
+        <select class="form-select" aria-label="Default select example" v-model="category_id">
+            <option disabled>Selecciona una categoría</option>
+            <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
+        </select>
+    </div>
+</div>
+
   
       <div class="row">
         <div class="col-md-9 offset-md-3">
