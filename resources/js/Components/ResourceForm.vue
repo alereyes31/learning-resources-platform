@@ -1,8 +1,17 @@
 <script setup>
-import { ref } from 'vue';
+import axios from 'axios';
+import { ref, onMounted } from 'vue';
+
+let categories = ref([]);
 let title = ref('');
 let description = ref('');
 let link = ref('');
+
+onMounted(() => {
+    axios.get('api/categories').then((response) => {
+        categories = response.data;
+    });
+});
 
 function createResource() {
     console.log("Creando Recurso", title.value, description.value, link.value);

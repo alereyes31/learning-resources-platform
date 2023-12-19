@@ -20,7 +20,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/', [ResourceController::class, 'index']);
+Route::get('/', [ResourceController::class, 'index'])->name('inicio');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -34,5 +34,8 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
+Route::get('api/resources', [ResourceController::class,'search']);
 Route::middleware('auth')->post('api/resources', [ResourceController::class, 'store']);
+Route::middleware('auth')->get('api/categories', [ResourceController::class, 'index']);
+
 

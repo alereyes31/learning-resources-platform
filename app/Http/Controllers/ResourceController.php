@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Models\Resource;
-use App\Models\Category; // Asegúrate de importar la clase Category
+use App\Models\Category; 
 
 class ResourceController extends Controller
 {
@@ -29,8 +29,13 @@ class ResourceController extends Controller
             'creator_id' => $request->user()->id,
         ]);
 
-        // Puedes agregar una redirección u otra lógica después de crear el recurso
-
         return response()->json(['message' => 'Recurso creado con éxito']);
+    }
+    public function search(Request $request)
+    {
+        return Resource::where('title', 'LIKE', "%$request->search%")
+            ->with('category')
+            ->get();
+
     }
 }

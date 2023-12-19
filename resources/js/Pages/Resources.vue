@@ -1,15 +1,23 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
-import { onMounted, defineProps } from 'vue';
+import { onMounted, defineProps, ref, watch } from 'vue';
+
 
 const props = defineProps({
     canLogin: Boolean,
     canRegister: Boolean,
     resources: Array,
 });
+let search = ref('');
+let filterResources = ref([]);
+watch(search,(value)=>{
+    axios.get('api/resources?search='+value).then((response) => {
+        filterResources = response.data;
+    });
+})
 
 onMounted(() => {
-    console.log("Recursos Cargados!",props.resources);
+    filterResources.value = props.resources;
 });
 
 </script>
@@ -59,6 +67,7 @@ onMounted(() => {
                 </svg>
             </div>
             <div class="relative overflow-x-auto">
+            <input type="text" class="w-full p-4 bg-gray-100 rounded-lg dark:bg-gray-800" placeholder="Buscar Recurso" v-model="search"/>  
             <table class="w-full text-sm text-left text-gray-500 ">
             <thead class="text-lg text-gray-700 uppercase bg-gray-500">
                 <tr>
@@ -74,7 +83,7 @@ onMounted(() => {
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="resource in resources" :key="resource.id">
+                <tr v-for="resource in filterResources" :key="resource.id">
                     <th scope="row" class="p-4" text="left">{{ resource.title }}</th> 
                     <th scope="row" class="p-4">
                     <a target="_blank" :href="resource.link">Ver Recurso</a>  </th>
