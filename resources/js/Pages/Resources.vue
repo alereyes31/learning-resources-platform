@@ -7,17 +7,33 @@ const props = defineProps({
     canLogin: Boolean,
     canRegister: Boolean,
     resources: Array,
+    categories: Array
 });
+
 let search = ref('');
 let filterResources = ref([]);
-watch(search,(value)=>{
-    axios.get('api/resources?search='+value).then((response) => {
-        filterResources = response.data;
-    });
-})
+let filteredCategory = ref(null);
+
+const fetchData = async () => {
+    try {
+        const response = await axios.get('api/resources', {
+            params: {
+                search: search.value,
+                category: filteredCategory.value
+            }
+        });
+        filterResources.value = response.data;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+};
+
+watch([search, filteredCategory], () => {
+    fetchData();
+});
 
 onMounted(() => {
-    filterResources.value = props.resources;
+    fetchData();
 });
 
 </script>
@@ -51,7 +67,6 @@ onMounted(() => {
                 >
             </template>
         </div>
-
         <div class="max-w-7xl mx-auto p-6 lg:p-8">
             <div class="flex justify-center">
                 <svg
@@ -67,7 +82,13 @@ onMounted(() => {
                 </svg>
             </div>
             <div class="relative overflow-x-auto">
+            <div>
             <input type="text" class="w-full p-4 bg-gray-100 rounded-lg dark:bg-gray-800" placeholder="Buscar Recurso" v-model="search"/>  
+            <select type="text" class="w-full p-4 bg-gray-100 rounded-lg dark:bg-gray-800" aria-label="Default select example" v-model="filteredCategory">
+            <option value="">Todas las categorías</option>
+            <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
+        </select>
+            </div>
             <table class="w-full text-sm text-left text-gray-500 ">
             <thead class="text-lg text-gray-700 uppercase bg-gray-500">
                 <tr>
