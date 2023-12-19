@@ -5,6 +5,9 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ResourceController;
+use App\Models\Resource;
+use App\Models\Category;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,3 +33,13 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+Route::middleware('auth')->post('api/resources', function (Request $request) {
+    Resource::create([
+        'title' => $request->title,
+        'link' => $request->link,
+        'description' => $request->description,
+        'category_id' => Category::first()->id,
+        'creator_id' => $request->user()->id,
+    ]);
+});
+
