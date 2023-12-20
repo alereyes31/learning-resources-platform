@@ -9,6 +9,7 @@ use App\Models\Resource;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\VoteController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -37,5 +38,6 @@ require __DIR__.'/auth.php';
 Route::get('api/resources', [ResourceController::class,'search']);
 Route::middleware('auth')->post('api/resources', [ResourceController::class, 'store']);
 Route::get('api/categories', [CategoryController::class, 'index']);
+Route::get('api/vote/{resource}', VoteController::class);
 
 
