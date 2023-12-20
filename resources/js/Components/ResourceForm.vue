@@ -38,7 +38,6 @@ function createResource() {
           <label for="title">Título:</label>
         </div>
         <div class="col-md-9">
-          <p>{{ title }}</p>
           <input type="text" v-model="title" id="title" class="form-control" />
         </div>
       </div>
